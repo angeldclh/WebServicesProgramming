@@ -33,27 +33,30 @@ int main(){
         fprintf(stdout,"SERVER: Error at socket creation.\n");
         exit(1);
     }
-    
+
     printf("SERVER: socket created.\n");
 
     //Bind socket to port
-    if(bind(sock, (struct sockaddr*) &sock_address, sizeof(sock))<0){
+    if(bind(sock, (struct sockaddr*) &sock_address, sizeof(sock_address))<0){
       fprintf(stdout,"SERVER: Error at socket binding.\n");
       close(sock);
       exit(1);
     }
+    printf("SERVER: success at binding.\n");
 
 
     //Server loop
     while(1){
         //Receive data
+        printf("SERVER: waiting for message.\n");
         if(recvfrom(sock, (char *)&buf, BUFLEN, 0, (struct sockaddr *) &sock_address, &sizesock) == -1){
             fprintf(stderr, "SERVER: Error when receiving message.\n");
             close(sock);
             exit(1);
         }
+        printf("SERVER; message received.\n");
 
-        //Get numbers and operation
+        //Get numbers and operation. No need to check the message's format: the client does that
         num1 = buf[0] - '0';
         num2 = buf[1] - '0';
         op = buf[2];
@@ -71,6 +74,8 @@ int main(){
             result = num1/num2;
         }
 
+        printf("SERVER: sending message.\n");
+        
         //Create a message with the result
         snprintf((char*)&result_msg, RESLEN, "%.3f",result);
 

@@ -1,0 +1,85 @@
+
+
+#include <sys/socket.h>
+#include <sys/types.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <strings.h>
+#include <netinet/in.h>
+#include <unistd.h>
+
+#define PORT 50000 //Private port to avoid potential conflicts
+#define BUFLEN 4 //2 numbers and 1 operator + EOF
+#define RESLEN 6 //In case of division, 3 decimals
+
+int main(){
+
+    int sock, num1, num2;
+    socklen_t sizesock;
+    char buf[BUFLEN], op;
+    double result; //Double and not int for division
+    char result_msg[RESLEN];
+    
+    //Create UDP socket
+    struct sockaddr_in sock_address;
+    bzero(&sock_address, sizeof(struct sockaddr_in));
+    sock_address.sin_family=AF_INET;
+    sock_address.sin_addr.s_addr=INADDR_ANY;
+    sock_address.sin_port=htons(PORT);
+    sizesock = sizeof(sock_address);
+
+   
+    if((sock=socket(PF_INET,SOCK_DGRAM,0))==-1){
+        fprintf(stdout,"SERVER: Error at socket creation.\n");
+        exit(1);
+    }
+    
+    printf("SERVER: socket created.\n");
+
+    //Bind socket to port
+    if(bind(sock, (struct sockaddr*) &sock_address, sizeof(sock))<0){
+      fprintf(stdout,"SERVER: Error at socket binding.\n");
+      close(sock);
+      exit(1);
+    }
+
+
+    //Server loop
+    while(1){
+        //Receive data
+        if(recvfrom(sock, (char *)&buf, BUFLEN, 0, (struct sockaddr *) &sock_address, &sizesock) == -1){
+            fprintf(stderr, "SERVER: Error when receiving message.\n");
+            close(sock);
+            exit(1);
+        }
+
+        //Get numbers and operation
+        num1 = buf[0] - '0';
+        num2 = buf[1] - '0';
+        op = buf[2];
+        switch(op){
+        case '+' :
+            result = num1+num2;
+            break;
+        case '-' :
+            result = num1-num2;
+            break;
+        case '*' :
+            result = num1*num2;
+            break;
+        default : //Division, the client controls that only +, -, * or / is passed
+            result = num1/num2;
+        }
+
+        //Create a message with the result
+        snprintf((char*)&result_msg, RESLEN, "%.3f",result);
+
+        //Send it
+        if(sendto(sock, &result_msg, RESLEN, 0, (struct sockaddr *) &sock_address, sizesock) == -1) {
+            fprintf(stderr, "SERVER: Error when trying to send the result.\n");
+            close(sock);
+            exit(1);
+        }
+    }
+}
+            

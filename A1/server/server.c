@@ -12,6 +12,7 @@
 #define BUFLEN 4 //2 numbers and 1 operator + EOF
 #define RESLEN 6 //In case of division, 3 decimals
 
+
 int main(){
 
     int sock, num1, num2;
@@ -86,5 +87,8 @@ int main(){
             exit(1);
         }
     }
+
+    /* The socket is not closed explicitly. However, I've checked with netstat --listen and
+       SIGINT (ctrl-c) does close it */
 }
             

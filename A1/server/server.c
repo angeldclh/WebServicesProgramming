@@ -1,5 +1,3 @@
-
-
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <stdio.h>
@@ -7,17 +5,14 @@
 #include <strings.h>
 #include <netinet/in.h>
 #include <unistd.h>
-
-#define PORT 50000 //Private port to avoid potential conflicts
-#define BUFLEN 4 //2 numbers and 1 operator + EOF
-#define RESLEN 6 //In case of division, 3 decimals
+#include "../constants.h"
 
 
 int main(){
 
     int sock, num1, num2;
     socklen_t sizesock;
-    char buf[BUFLEN], op;
+    char buf[MSGLEN], op;
     double result; //Double and not int for division
     char result_msg[RESLEN];
     
@@ -26,7 +21,7 @@ int main(){
     bzero(&sock_address, sizeof(struct sockaddr_in));
     sock_address.sin_family=AF_INET;
     sock_address.sin_addr.s_addr=INADDR_ANY;
-    sock_address.sin_port=htons(PORT);
+    sock_address.sin_port=htons(PORT_SERVER);
     sizesock = sizeof(sock_address);
 
    
@@ -50,7 +45,7 @@ int main(){
     while(1){
         //Receive data
         printf("SERVER: waiting for message.\n");
-        if(recvfrom(sock, (char *)&buf, BUFLEN, 0, (struct sockaddr *) &sock_address, &sizesock) == -1){
+        if(recvfrom(sock, (char *)&buf, MSGLEN, 0, (struct sockaddr *) &sock_address, &sizesock) == -1){
             fprintf(stderr, "SERVER: Error when receiving message.\n");
             close(sock);
             exit(1);
@@ -90,5 +85,6 @@ int main(){
 
     /* The socket is not closed explicitly. However, I've checked with netstat --listen and
        SIGINT (ctrl-c) does close it */
+    
 }
             

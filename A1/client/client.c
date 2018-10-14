@@ -14,7 +14,7 @@ int main(){
     int sock, end, aux, anothercalc;
     int num1, num2, op;
     struct sockaddr_in sock_address, sock_address_server;
-    char msg[MSGLEN], result_msg[MSGLEN];
+    char msg[MSGLEN], result_msg[RESLEN];
     socklen_t sizesock;
 
     //Create UDP socket
@@ -117,7 +117,7 @@ int main(){
     //Close the socket
     close(sock);
  
-    //   return 0;
+    return 0;
 }
 
         

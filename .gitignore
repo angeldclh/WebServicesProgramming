@@ -35,8 +35,8 @@
 *.i*86
 *.x86_64
 *.hex
-*server/server
-*client/client
+A1/server/server
+A1/client/client
 
 # Debug files
 *.dSYM/
@@ -52,3 +52,6 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
+
+# Others
+*#*

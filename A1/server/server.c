@@ -66,8 +66,8 @@ int main(){
         case '*' :
             result = num1*num2;
             break;
-        default : //Division, the client controls that only +, -, * or / is passed
-            result = num1/num2;
+        case '/': 
+            result = (double)num1/(double)num2;
         }
 
         printf("SERVER: sending message.\n");

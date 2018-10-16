@@ -22,13 +22,6 @@ int main(int argc, char **argv){
     char result_msg[RESLEN];//, *line;
     socklen_t sizesock;
     
-    
-    //Create UDP socket
-    bzero(&sock_address, sizeof(struct sockaddr_in));
-    sock_address.sin_family=AF_INET;
-    sock_address.sin_addr.s_addr=inet_addr(LOCALHOST); //Same for all clients
-    sock_address.sin_port=htons(0); //Dinamically find an unused port
-    //Each type client has his own port. TODO: try with htons(0)
     if(strcmp(argv[1], "1") == 0)
         clientid=1;
     else if (strcmp(argv[1], "2") == 0)
@@ -36,8 +29,12 @@ int main(int argc, char **argv){
     else
         clientid=3;
 
+    //Create UDP socket
+    bzero(&sock_address, sizeof(struct sockaddr_in));
+    sock_address.sin_family=AF_INET;
+    sock_address.sin_addr.s_addr=inet_addr(LOCALHOST); //Same for all clients
+    sock_address.sin_port=htons(0); //Dinamically find an unused port
 
-    printf("Puerto: %d\n", sock_address.sin_port);
 
     sizesock = sizeof(sock_address);
    
@@ -50,9 +47,9 @@ int main(int argc, char **argv){
 
     //Bind socket to port
     if(bind(sock, (struct sockaddr*) &sock_address, sizeof(sock_address))<0){
-      fprintf(stdout,"CLIENT: Error at socket binding.\n");
-      close(sock);
-      exit(1);
+        fprintf(stdout,"CLIENT: Error at socket binding.\n");
+        close(sock);
+        exit(1);
     }
     printf("CLIENT: success at binding.\n");
 
@@ -99,7 +96,7 @@ int main(int argc, char **argv){
             printf("Please, enter the operation you want to perform (+, -, * or /) and press enter.\n");
             op = getchar();
             while((aux = getchar()) != EOF && aux != '\n');
-            }
+        }
         while(op != 43 && //ASCII +
               op != 45 && //ASCII -
               op != 42 && //ASCII *

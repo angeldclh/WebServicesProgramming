@@ -11,23 +11,23 @@
 
 
 int main(int argc, char **argv){
-    if (argc != 2 || (strcmp(argv[1],"1") != 0 && strcmp(argv[1],"2") != 0 && strcmp(argv[1],"2") != 0 )){
-        fprintf(stderr, "CLIENT: Introduce your client identifer (1, 2 or 3).\n");
+    if (argc != 2 || (strcmp(argv[1],"1") != 0 && strcmp(argv[1],"2") != 0 && strcmp(argv[1],"3")) != 0 ){
+        fprintf(stderr, "CLIENT: Introduce your client identifer (1, 2 or 3) as an argument.\n");
         return 1;
     }
     int sock, aux;
     int num1, num2, op, clientid;
     struct sockaddr_in sock_address, sock_address_server;
-    char msg[MSGLEN], result_msg[RESLEN];
+    char msg[MSGLEN];
+    char result_msg[RESLEN];//, *line;
     socklen_t sizesock;
-
-   
     
     
     //Create UDP socket
     bzero(&sock_address, sizeof(struct sockaddr_in));
     sock_address.sin_family=AF_INET;
-    sock_address.sin_addr.s_addr=inet_addr(LOCALHOST);
+    sock_address.sin_addr.s_addr=inet_addr(LOCALHOST); //Same for all clients
+    //Each type client has his own port. TODO: try with htons(0)
     if(strcmp(argv[1], "1") == 0){
         clientid=1;
         sock_address.sin_port=htons(PORT_CLIENT1);
@@ -40,6 +40,8 @@ int main(int argc, char **argv){
         clientid=3;
         sock_address.sin_port=htons(PORT_CLIENT3);
     }
+
+    printf("Puerto: %d\n", sock_address.sin_port);
 
     sizesock = sizeof(sock_address);
    
@@ -62,10 +64,11 @@ int main(int argc, char **argv){
     bzero(&sock_address_server, sizeof(struct sockaddr_in));
     sock_address_server.sin_family=AF_INET;
     sock_address_server.sin_addr.s_addr=inet_addr(SERVER_ADDRESS);
-    sock_address_server.sin_port=htons(PORT_SERVER);
+
     
 
-    if(clientid == 1) { //Send two digits
+    if(clientid == 1) { //Get two digits
+        sock_address_server.sin_port=htons(PORT_SERVER1);
         //Empty the message
         bzero(msg, MSGLEN*sizeof(char));
         
@@ -86,9 +89,16 @@ int main(int argc, char **argv){
             while((aux = getchar()) != EOF && aux != '\n');
         }
         while(num2-'0'>9);   
-        
+
+        //Message is formed, send it to the server
+        if(sendto(sock, &msg, MSGLEN, 0, (struct sockaddr *) &sock_address_server, sizesock) == -1) {
+            fprintf(stderr, "CLIENT: Error when trying to send the numbers.\n");
+            close(sock);
+            exit(1);
+        }
     }
-    else if(clientid == 2){ //Send the operation
+    else if(clientid == 2){ //Get the operation
+        sock_address_server.sin_port=htons(PORT_SERVER2);
         do {
             printf("Please, enter the operation you want to perform (+, -, * or /) and press enter.\n");
             op = getchar();
@@ -98,10 +108,24 @@ int main(int argc, char **argv){
               op != 45 && //ASCII -
               op != 42 && //ASCII *
               op != 47); //ASCII /
-        msg[2] = (char) op;
+
+        //Message is formed, send it to the server
+        if(sendto(sock, (char*) &op, 1, 0, (struct sockaddr *) &sock_address_server, sizesock) == -1) {
+            fprintf(stderr, "CLIENT: Error when trying to send the operation.\n");
+            close(sock);
+            exit(1);
+        }
     }
-    else{ //Receive the result
-        //Receive the answer
+    else{ //Send "hello message" and receive the result
+        sock_address_server.sin_port=htons(PORT_SERVER3);
+        if(sendto(sock, "h", 1, 0, (struct sockaddr *) &sock_address_server, sizesock) == -1) {
+            fprintf(stderr, "CLIENT: Error when trying to send the hello message.\n");
+            close(sock);
+            exit(1);
+        }
+        printf("CLIENT: hello message sent.\n");
+
+        
         if(recvfrom(sock, (char *) result_msg, RESLEN, 0, (struct sockaddr *) &sock_address_server, &sizesock) == -1){
             fprintf(stderr, "CLIENT: Error when receiving result.\n");
             close(sock);

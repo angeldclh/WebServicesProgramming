@@ -27,19 +27,15 @@ int main(int argc, char **argv){
     bzero(&sock_address, sizeof(struct sockaddr_in));
     sock_address.sin_family=AF_INET;
     sock_address.sin_addr.s_addr=inet_addr(LOCALHOST); //Same for all clients
+    sock_address.sin_port=htons(0); //Dinamically find an unused port
     //Each type client has his own port. TODO: try with htons(0)
-    if(strcmp(argv[1], "1") == 0){
+    if(strcmp(argv[1], "1") == 0)
         clientid=1;
-        sock_address.sin_port=htons(PORT_CLIENT1);
-    }   
-    else if (strcmp(argv[1], "2") == 0){
+    else if (strcmp(argv[1], "2") == 0)
         clientid=2;
-        sock_address.sin_port=htons(PORT_CLIENT2);
-    }
-    else{
+    else
         clientid=3;
-        sock_address.sin_port=htons(PORT_CLIENT3);
-    }
+
 
     printf("Puerto: %d\n", sock_address.sin_port);
 

@@ -10,18 +10,37 @@
 #include "../constants.h"
 
 
-int main(){
-    int sock, end, aux, anothercalc;
-    int num1, num2, op;
+int main(int argc, char **argv){
+    if (argc != 2 || (strcmp(argv[1],"1") != 0 && strcmp(argv[1],"2") != 0 && strcmp(argv[1],"2") != 0 )){
+        fprintf(stderr, "CLIENT: Introduce your client identifer (1, 2 or 3).\n");
+        return 1;
+    }
+    int sock, aux;
+    int num1, num2, op, clientid;
     struct sockaddr_in sock_address, sock_address_server;
     char msg[MSGLEN], result_msg[RESLEN];
     socklen_t sizesock;
 
+   
+    
+    
     //Create UDP socket
     bzero(&sock_address, sizeof(struct sockaddr_in));
     sock_address.sin_family=AF_INET;
     sock_address.sin_addr.s_addr=inet_addr(LOCALHOST);
-    sock_address.sin_port=htons(PORT_CLIENT);
+    if(strcmp(argv[1], "1") == 0){
+        clientid=1;
+        sock_address.sin_port=htons(PORT_CLIENT1);
+    }   
+    else if (strcmp(argv[1], "2") == 0){
+        clientid=2;
+        sock_address.sin_port=htons(PORT_CLIENT2);
+    }
+    else{
+        clientid=3;
+        sock_address.sin_port=htons(PORT_CLIENT3);
+    }
+
     sizesock = sizeof(sock_address);
    
     if((sock=socket(AF_INET,SOCK_DGRAM,0))==-1){
@@ -46,9 +65,7 @@ int main(){
     sock_address_server.sin_port=htons(PORT_SERVER);
     
 
-    //Get and send digits and operation, receive result and ask for another operation or closing
-    end = 0; 
-    while(!end){
+    if(clientid == 1) { //Send two digits
         //Empty the message
         bzero(msg, MSGLEN*sizeof(char));
         
@@ -69,9 +86,9 @@ int main(){
             while((aux = getchar()) != EOF && aux != '\n');
         }
         while(num2-'0'>9);   
-
-        //Ask for the operation
-
+        
+    }
+    else if(clientid == 2){ //Send the operation
         do {
             printf("Please, enter the operation you want to perform (+, -, * or /) and press enter.\n");
             op = getchar();
@@ -82,17 +99,8 @@ int main(){
               op != 42 && //ASCII *
               op != 47); //ASCII /
         msg[2] = (char) op;
-            
-
-        //Message is formed, send it to the server
-        if(sendto(sock, &msg, MSGLEN, 0, (struct sockaddr *) &sock_address_server, sizesock) == -1) {
-            fprintf(stderr, "CLIENT: Error when trying to send the message.\n");
-            close(sock);
-            exit(1);
-        }
-
-        printf("CLIENT: message sent.\n");
-
+    }
+    else{ //Receive the result
         //Receive the answer
         if(recvfrom(sock, (char *) result_msg, RESLEN, 0, (struct sockaddr *) &sock_address_server, &sizesock) == -1){
             fprintf(stderr, "CLIENT: Error when receiving result.\n");
@@ -100,20 +108,9 @@ int main(){
             exit(1);
         }
         printf("The result is %s.\n", result_msg);
+    }
 
-        //Do another calculation or finish
-        do{
-        printf("Do you want to do another calculation? y/n\n");
-        anothercalc = getchar();
-        while((aux = getchar()) != EOF && aux != '\n');
-        }        
-        while(anothercalc != (int)'y' &&
-              anothercalc != (int)'n');
-
-        if(anothercalc == 'n')
-            end = 1;
-        }
-
+    
     //Close the socket
     close(sock);
  

@@ -44,12 +44,14 @@ int create_bind_listen_socket(int *sock, struct sockaddr_in *sock_address, int p
 
 int main(){
 
-    int sock1, sock2, sock3, num1, num2, aux;
+    int sock1, sock2, sock3, sock1_client, sock2_client, sock3_client, num1, num2, aux;
     char buf[MSGLEN], op;
     double result; //Double and not int for division
     char result_msg[RESLEN];
+    socklen_t addrlen;
     struct sockaddr_in sock_address1, sock_address2, sock_address3;
 
+    addrlen = sizeof(struct sockaddr_in);
     
     //Socket server <-> client 1
     if(create_bind_listen_socket(&sock1, &sock_address1, PORT_SERVER1) != 0){
@@ -75,7 +77,16 @@ int main(){
         //Receive numbers from client 1
         printf("SERVER: waiting for 2 digits.\n");
 
-        if((aux = recv(sock1, (char *)&buf, MSGLEN, 0)) == -1){
+        if((sock1_client = accept(sock1, (struct sockaddr *) &sock_address1, &addrlen)) < 0){
+            fprintf(stderr, "SERVER: Error when accepting connetion from client 1.\n");
+            close(sock1);
+            close(sock2);
+            close(sock3);            
+            exit(1);
+        }
+            
+
+        if((aux = recv(sock1_client, (char *)&buf, MSGLEN, 0)) == -1){
             fprintf(stderr, "SERVER: Error when receiving message with 2 digits.\n");
             close(sock1);
             close(sock2);
@@ -88,7 +99,16 @@ int main(){
         }
         printf("SERVER: digits received, waiting for operation\n");
 
-        if((aux = recv(sock2, (char *)&op, 1, 0)) == -1){
+        //Accept connection from client 2 and get the operation
+        if((sock2_client = accept(sock2, (struct sockaddr *) &sock_address2, &addrlen)) < 0){
+            fprintf(stderr, "SERVER: Error when accepting connetion from client 2.\n");
+            close(sock1);
+            close(sock2);
+            close(sock3);            
+            exit(1);
+        }
+
+        if((aux = recv(sock2_client, (char *)&op, 1, 0)) == -1){
             fprintf(stderr, "SERVER: Error when receiving message with operation.\n");
             close(sock1);
             close(sock2);
@@ -123,28 +143,20 @@ int main(){
        
         //Create a message with the result
         snprintf((char*)&result_msg, RESLEN, "%.3f",result);
-
-
-        //Send it to client 3
-        // Receive a "hello message" from client 3 to learn its address. Char op can be reused since the message is already formed
-        if((aux = recv(sock3, (char *)&op, 1, 0)) == -1){
-            fprintf(stderr, "SERVER: Error when receiving hello message from client 3.\n");
+        
+        
+        //Accept connection from client 3 and send him the result
+        if((sock3_client = accept(sock3, (struct sockaddr *) &sock_address3, &addrlen)) < 0){
+            fprintf(stderr, "SERVER: Error when accepting connetion from client 3.\n");
             close(sock1);
             close(sock2);
             close(sock3);            
             exit(1);
         }
-        else if (aux == 0) { //Client closed connection
-            printf("SERVER: Client 1 closed the connection.\n");
-            //close(sock3);
-        }
 
-
-       printf("SERVER: hello message from client 3 received.\n");
-        
        printf("SERVER: sending result.\n");
 
-       if(write(sock3, &result_msg, RESLEN) == -1){
+       if(write(sock3_client, &result_msg, RESLEN) == -1){
            fprintf(stderr, "SERVER: Error when trying to send the result.\n");
            close(sock1);
            close(sock2);

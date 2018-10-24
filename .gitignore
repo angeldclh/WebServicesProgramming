@@ -37,6 +37,8 @@
 *.hex
 A1/server/server
 A1/client/client
+A2/server/server
+A2/client/client
 
 # Debug files
 *.dSYM/

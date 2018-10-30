@@ -122,7 +122,7 @@ int main(int argc, char **argv){
             exit(1);
         }
     }
-    else{ //Send "hello message" and receive the result
+    else{ //Receive the result
         //Connect to server
         sock_address_server.sin_port=htons(PORT_SERVER3);
         if(connect(sock, (struct sockaddr *) &sock_address_server, sizeof(sock_address_server)) < 0){
@@ -130,14 +130,6 @@ int main(int argc, char **argv){
             close(sock);
             exit(1);
         }
-        
-        if(send(sock, "h", 1, 0) == -1) {
-            fprintf(stderr, "CLIENT: Error when trying to send the hello message.\n");
-            close(sock);
-            exit(1);
-        }
-        printf("CLIENT: hello message sent.\n");
-
         
         if(recv(sock, (char *) result_msg, RESLEN, 0) == -1){
             fprintf(stderr, "CLIENT: Error when receiving result.\n");

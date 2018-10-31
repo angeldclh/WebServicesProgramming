@@ -1,6 +1,6 @@
 CC=gcc
 CFLAGS=-Wall -g
-LIBRARIES=-lpthread
+LIBRARIES=-pthread
 
 server : server.c
 	$(CC) $(CFLAGS) $(LIBRARIES) -o server server.c

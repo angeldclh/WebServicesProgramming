@@ -35,10 +35,9 @@
 *.i*86
 *.x86_64
 *.hex
-A1/server/server
-A1/client/client
-A2/server/server
-A2/client/client
+*server
+*client
+
 
 # Debug files
 *.dSYM/

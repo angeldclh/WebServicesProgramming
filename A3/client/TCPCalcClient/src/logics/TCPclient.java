@@ -5,9 +5,12 @@
  */
 package logics;
 
+import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.Socket;
 
 /**
@@ -28,13 +31,12 @@ public class TCPclient {
     //Sends the calculation to te server and returns the result as a String
     public String calculateInServer(int n1, int n2, char op) throws IOException {
         //Send to server
-        DataOutputStream out = new DataOutputStream(sock.getOutputStream());
-        out.writeUTF(Double.toString(n1) + op + Double.toString(n2));
-        out.flush();
+        PrintWriter out = new PrintWriter(sock.getOutputStream(), true);
+        out.println(Double.toString(n1) + Character.toString(op) + Double.toString(n2));
 
         //Receive from server
-        DataInputStream in = new DataInputStream(sock.getInputStream());
+        BufferedReader in = new BufferedReader(new InputStreamReader(sock.getInputStream()));
 
-        return in.readUTF();
+        return in.readLine();
     }
 }

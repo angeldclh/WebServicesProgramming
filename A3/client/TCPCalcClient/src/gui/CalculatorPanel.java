@@ -18,11 +18,15 @@ public class CalculatorPanel extends javax.swing.JFrame {
 
     private int num1, num2;
     private char op;
+    private final TCPclient client;
 
     /**
      * Creates new form NewJFrame
+     *
+     * @throws java.io.IOException
      */
-    public CalculatorPanel() {
+    public CalculatorPanel() throws IOException {
+        client = new TCPclient();
         initComponents();
     }
 
@@ -567,7 +571,6 @@ public class CalculatorPanel extends javax.swing.JFrame {
 
     private void buttonEqualsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_buttonEqualsMouseClicked
         try {
-            TCPclient client = new TCPclient();
             textScreen.setText(client.calculateInServer(num1, num2, op));
         } catch (IOException ex) {
             Logger.getLogger(CalculatorPanel.class.getName()).log(Level.SEVERE, null, ex);
@@ -605,7 +608,11 @@ public class CalculatorPanel extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new CalculatorPanel().setVisible(true);
+                try {
+                    new CalculatorPanel().setVisible(true);
+                } catch (IOException ex) {
+                    Logger.getLogger(CalculatorPanel.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
     }

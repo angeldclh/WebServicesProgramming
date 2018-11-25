@@ -78,20 +78,21 @@ void *connection_handler(void *arg){
     i = 0;
     while(buf[i] != '+' && buf[i] != '-' && buf[i] != '*' && buf[i] != '/'){
         read = buf[i];
+        printf("read = %c\n", read);
         auxbuf[i] = read;
         i++;
     }
     auxbuf[i] = '\0'; //End of string
     //String to double
     num1 = strtod(auxbuf, NULL);
-
+  
     //Operation:
     op = buf[i];
     i++;
-
+  
     //Second number
     num2 = strtod(&buf[i], NULL);
-
+  
     //Result
     switch(op){
     case '+' :
@@ -118,6 +119,7 @@ void *connection_handler(void *arg){
         exit(1);
     }
 
+    printf("message sent\n");
     close(fd);
 
     return NULL;

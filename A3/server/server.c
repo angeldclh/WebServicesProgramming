@@ -52,7 +52,6 @@ int create_bind_listen_socket(int *sock, struct sockaddr_in *sock_address, int p
 }
 
 
-/* TODO: Thread function */
 void *connection_handler(void *arg){
     char op, read, aux;
     char buf[MSGLEN], auxbuf[MSGLEN], result_msg[RESLEN];
@@ -162,7 +161,7 @@ int main(){
         }
         
         //When accepting a connection, create a new thread for that client
-        if((thread_arg->fd = accept(listening_sock, (struct sockaddr *)&thread_arg->address, &addrlen)) != 0){
+        if((thread_arg->fd = accept(listening_sock, (struct sockaddr *)&thread_arg->address, &addrlen)) == -1){
             fprintf(stderr, "Error when accepting connection.\n");
             free(thread_arg);
             continue;

@@ -62,65 +62,67 @@ void *connection_handler(void *arg){
     thread_arg = (pthread_arg_t *) arg;
     fd = thread_arg->fd;
 
-    //Receive message with numbers and operation
-    if((aux = recv(fd, (char *)&buf, MSGLEN, 0)) == -1){
-        fprintf(stderr, "SERVER: Error when receiving message from client.\n");
-        close(fd);
-        return NULL;
-    }
-    else if (aux == 0) { //Client closed connection
-        printf("SERVER: Client closed the connection.\n");
-        return NULL;
-    }
- 
-    //Get numbers and operation. No need to check the message's format: clients do that
-    //First number
-    i = 0;
-    while(buf[i] != '+' && buf[i] != '-' && buf[i] != '*' && buf[i] != '/'){
-        read = buf[i];
-        printf("read = %c\n", read);
-        auxbuf[i] = read;
-        i++;
-    }
-    auxbuf[i] = '\0'; //End of string
-    //String to double
-    num1 = strtod(auxbuf, NULL);
-  
-    //Operation:
-    op = buf[i];
-    i++;
-  
-    //Second number
-    num2 = strtod(&buf[i], NULL);
-  
-    //Result
-    switch(op){
-    case '+' :
-        result = num1+num2;
-        break;
-    case '-' :
-        result = num1-num2;
-        break;
-    case '*' :
-        result = num1*num2;
-        break;
-    case '/': 
-        result = num1/num2;
-    }
-       
-    //Create a message with the result
-    memset(result_msg, 0, sizeof(result_msg));
-    snprintf((char*)&result_msg, RESLEN, "%.3f", result);
-        
-    //Send the result
-    if(send(fd, &result_msg, RESLEN, 0) == -1){
-        fprintf(stderr, "SERVER: Error when trying to send the result.\n");
-        close(fd);
-        exit(1);
-    }
+    while(1){
 
-    printf("message sent\n");
-    close(fd);
+        //Receive message with numbers and operation
+        if((aux = recv(fd, (char *)&buf, MSGLEN, 0)) == -1){
+            fprintf(stderr, "SERVER: Error when receiving message from client.\n");
+            close(fd);
+            return NULL;
+        }
+        else if (aux == 0) { //Client closed connection -> server closes its socket as well
+            printf("SERVER: Client closed the connection.\n");
+            close(fd);
+            return NULL;
+        }
+ 
+        //Get numbers and operation. No need to check the message's format: clients do that
+        //First number
+        i = 0;
+        while(buf[i] != '+' && buf[i] != '-' && buf[i] != '*' && buf[i] != '/'){
+            read = buf[i];
+            auxbuf[i] = read;
+            i++;
+        }
+        auxbuf[i] = '\0'; //End of string
+        //String to double
+        num1 = strtod(auxbuf, NULL);
+  
+        //Operation:
+        op = buf[i];
+        i++;
+  
+        //Second number
+        num2 = strtod(&buf[i], NULL);
+  
+        //Result
+        switch(op){
+        case '+' :
+            result = num1+num2;
+            break;
+        case '-' :
+            result = num1-num2;
+            break;
+        case '*' :
+            result = num1*num2;
+            break;
+        case '/': 
+            result = num1/num2;
+        }
+       
+        //Create a message with the result
+        memset(result_msg, 0, sizeof(result_msg));
+        snprintf((char*)&result_msg, RESLEN+1, "%.3f\n", result); //Java client reads a line -> add end of line
+        
+        //Send the result
+        if(send(fd, &result_msg, RESLEN, 0) == -1){
+            fprintf(stderr, "SERVER: Error when trying to send the result.\n");
+            close(fd);
+            exit(1);
+        }
+
+        printf("message sent\n");
+    }
 
     return NULL;
 }

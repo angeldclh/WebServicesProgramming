@@ -6,8 +6,6 @@
 package logics;
 
 import java.io.BufferedReader;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
@@ -24,7 +22,6 @@ public class TCPclient {
     private final Socket sock;
 
     public TCPclient() throws IOException {
-        //TODO crear socket TCP
         this.sock = new Socket(HOSTNAME, PORT);
     }
 
@@ -34,14 +31,15 @@ public class TCPclient {
 
     //Sends the calculation to te server and returns the result as a String
     public String calculateInServer(int n1, int n2, char op) throws IOException {
-        //Send to server
-        PrintWriter out = new PrintWriter(sock.getOutputStream(), true);
-        out.println(Double.toString(n1) + Character.toString(op) + Double.toString(n2));
+        if (op != '\u0000') { //If no operation, don't send anything to server to avoid segfault
+            //Send to server
+            PrintWriter out = new PrintWriter(sock.getOutputStream(), true);
+            out.println(Double.toString(n1) + Character.toString(op) + Double.toString(n2));
 
-        //Receive from server
-        BufferedReader in = new BufferedReader(new InputStreamReader(sock.getInputStream()));
-        String res = in.readLine();
-        //sock.close();
-        return res;
+            //Receive from server
+            BufferedReader in = new BufferedReader(new InputStreamReader(sock.getInputStream()));
+            return in.readLine();
+        }
+        return "0";
     }
 }

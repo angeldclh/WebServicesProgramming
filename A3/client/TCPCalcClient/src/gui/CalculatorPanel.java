@@ -18,7 +18,8 @@ public class CalculatorPanel extends javax.swing.JFrame {
 
     private int num1, num2;
     private char op;
-    private TCPclient client;
+    private final TCPclient client;
+    private boolean resultShowed;
 
     /**
      * Creates new form NewJFrame
@@ -27,6 +28,7 @@ public class CalculatorPanel extends javax.swing.JFrame {
      */
     public CalculatorPanel() throws IOException {
         client = new TCPclient();
+        this.resultShowed = false;
         initComponents();
     }
 
@@ -438,132 +440,153 @@ public class CalculatorPanel extends javax.swing.JFrame {
     }//GEN-LAST:event_buttonDivActionPerformed
 
     private void button1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_button1MouseClicked
-        if (textScreen.getText().isEmpty()) {
-            textScreen.setText(button1.getText());
-            num1 = 1;
-        } else {
-            textScreen.setText(textScreen.getText() + " " + button1.getText());
-            num2 = 1;
+        if (!this.resultShowed) {
+            if (textScreen.getText().isEmpty()) {
+                textScreen.setText(button1.getText());
+                num1 = 1;
+            } else {
+                textScreen.setText(textScreen.getText() + " " + button1.getText());
+                num2 = 1;
+            }
         }
     }//GEN-LAST:event_button1MouseClicked
 
     private void button2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_button2MouseClicked
-        if (textScreen.getText().isEmpty()) {
-            textScreen.setText(button2.getText());
-            num1 = 2;
-        } else {
-            textScreen.setText(textScreen.getText() + " " + button2.getText());
-            num2 = 2;
+        if (!this.resultShowed) {
+            if (textScreen.getText().isEmpty()) {
+                textScreen.setText(button2.getText());
+                num1 = 2;
+            } else {
+                textScreen.setText(textScreen.getText() + " " + button2.getText());
+                num2 = 2;
+            }
         }
     }//GEN-LAST:event_button2MouseClicked
 
     private void button3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_button3MouseClicked
-        if (textScreen.getText().isEmpty()) {
-            textScreen.setText(button3.getText());
-            num1 = 3;
-        } else {
-            textScreen.setText(textScreen.getText() + " " + button3.getText());
-            num2 = 3;
+        if (!this.resultShowed) {
+            if (textScreen.getText().isEmpty()) {
+                textScreen.setText(button3.getText());
+                num1 = 3;
+            } else {
+                textScreen.setText(textScreen.getText() + " " + button3.getText());
+                num2 = 3;
+            }
         }
     }//GEN-LAST:event_button3MouseClicked
 
     private void button4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_button4MouseClicked
-        if (textScreen.getText().isEmpty()) {
-            textScreen.setText(button4.getText());
-            num1 = 4;
-        } else {
-            textScreen.setText(textScreen.getText() + " " + button4.getText());
-            num2 = 4;
+        if (!this.resultShowed) {
+            if (textScreen.getText().isEmpty()) {
+                textScreen.setText(button4.getText());
+                num1 = 4;
+            } else {
+                textScreen.setText(textScreen.getText() + " " + button4.getText());
+                num2 = 4;
+            }
         }
     }//GEN-LAST:event_button4MouseClicked
 
     private void button5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_button5MouseClicked
-        if (textScreen.getText().isEmpty()) {
-            textScreen.setText(button5.getText());
-            num1 = 5;
-        } else {
-            textScreen.setText(textScreen.getText() + " " + button5.getText());
-            num2 = 5;
+        if (!this.resultShowed) {
+            if (textScreen.getText().isEmpty()) {
+                textScreen.setText(button5.getText());
+                num1 = 5;
+            } else {
+                textScreen.setText(textScreen.getText() + " " + button5.getText());
+                num2 = 5;
+            }
         }
     }//GEN-LAST:event_button5MouseClicked
 
     private void button6MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_button6MouseClicked
-        if (textScreen.getText().isEmpty()) {
-            textScreen.setText(button6.getText());
-            num1 = 6;
-        } else {
-            textScreen.setText(textScreen.getText() + " " + button6.getText());
-            num2 = 6;
+        if (!this.resultShowed) {
+            if (textScreen.getText().isEmpty()) {
+                textScreen.setText(button6.getText());
+                num1 = 6;
+            } else {
+                textScreen.setText(textScreen.getText() + " " + button6.getText());
+                num2 = 6;
+            }
         }
     }//GEN-LAST:event_button6MouseClicked
 
     private void button7MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_button7MouseClicked
-        if (textScreen.getText().isEmpty()) {
-            textScreen.setText(button7.getText());
-            num1 = 7;
-        } else {
-            textScreen.setText(textScreen.getText() + " " + button7.getText());
-            num2 = 7;
+        if (!this.resultShowed) {
+            if (textScreen.getText().isEmpty()) {
+                textScreen.setText(button7.getText());
+                num1 = 7;
+            } else {
+                textScreen.setText(textScreen.getText() + " " + button7.getText());
+                num2 = 7;
+            }
         }
     }//GEN-LAST:event_button7MouseClicked
 
     private void button8MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_button8MouseClicked
-        if (textScreen.getText().isEmpty()) {
-            textScreen.setText(button8.getText());
-            num1 = 8;
-        } else {
-            textScreen.setText(textScreen.getText() + " " + button8.getText());
-            num2 = 8;
+        if (!this.resultShowed) {
+            if (textScreen.getText().isEmpty()) {
+                textScreen.setText(button8.getText());
+                num1 = 8;
+            } else {
+                textScreen.setText(textScreen.getText() + " " + button8.getText());
+                num2 = 8;
+            }
         }
     }//GEN-LAST:event_button8MouseClicked
 
     private void button9MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_button9MouseClicked
-        if (textScreen.getText().isEmpty()) {
-            textScreen.setText(button9.getText());
-            num1 = 9;
-        } else {
-            textScreen.setText(textScreen.getText() + " " + button9.getText());
-            num2 = 9;
+        if (!this.resultShowed) {
+            if (textScreen.getText().isEmpty()) {
+                textScreen.setText(button9.getText());
+                num1 = 9;
+            } else {
+                textScreen.setText(textScreen.getText() + " " + button9.getText());
+                num2 = 9;
+            }
         }
     }//GEN-LAST:event_button9MouseClicked
 
     private void button0MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_button0MouseClicked
-        if (textScreen.getText().isEmpty()) {
-            textScreen.setText(button0.getText());
-            num1 = 0;
-        } else {
-            textScreen.setText(textScreen.getText() + " " + button0.getText());
-            num2 = 0;
+        if (!this.resultShowed) {
+            if (textScreen.getText().isEmpty()) {
+                textScreen.setText(button0.getText());
+                num1 = 0;
+            } else {
+                textScreen.setText(textScreen.getText() + " " + button0.getText());
+                num2 = 0;
+            }
         }
     }//GEN-LAST:event_button0MouseClicked
 
     private void buttonClearMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_buttonClearMouseClicked
         textScreen.setText("");
+        this.resultShowed = false;
     }//GEN-LAST:event_buttonClearMouseClicked
 
     private void buttonPlusMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_buttonPlusMouseClicked
-        if (!(textScreen.getText().isEmpty())) {
+        if (!this.resultShowed && !(textScreen.getText().isEmpty())) {
             op = '+';
             textScreen.setText(textScreen.getText() + " +");
         }
     }//GEN-LAST:event_buttonPlusMouseClicked
 
     private void buttonMinusMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_buttonMinusMouseClicked
-        if (!(textScreen.getText().isEmpty())) {
+        if (!this.resultShowed && !(textScreen.getText().isEmpty())) {
             op = '-';
             textScreen.setText(textScreen.getText() + " -");
         }
     }//GEN-LAST:event_buttonMinusMouseClicked
 
     private void buttonMultMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_buttonMultMouseClicked
-        if (!(textScreen.getText().isEmpty())) {
+        if (!this.resultShowed && !(textScreen.getText().isEmpty())) {
             op = '*';
             textScreen.setText(textScreen.getText() + " *");
         }
     }//GEN-LAST:event_buttonMultMouseClicked
 
     private void buttonDivMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_buttonDivMouseClicked
-        if (!(textScreen.getText().isEmpty())) {
+        if (!this.resultShowed && !(textScreen.getText().isEmpty())) {
             op = '/';
             textScreen.setText(textScreen.getText() + " /");
         }
@@ -575,6 +598,7 @@ public class CalculatorPanel extends javax.swing.JFrame {
         } catch (IOException ex) {
             Logger.getLogger(CalculatorPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
+        this.resultShowed = true;
     }//GEN-LAST:event_buttonEqualsMouseClicked
 
     /**

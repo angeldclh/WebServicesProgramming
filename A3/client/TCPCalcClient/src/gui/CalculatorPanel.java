@@ -594,7 +594,7 @@ public class CalculatorPanel extends javax.swing.JFrame {
 
     private void buttonEqualsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_buttonEqualsMouseClicked
         try {
-            textScreen.setText(client.calculateInServer(num1, num2, op));
+            textScreen.setText(textScreen.getText() + " = " + client.calculateInServer(num1, num2, op));
         } catch (IOException ex) {
             Logger.getLogger(CalculatorPanel.class.getName()).log(Level.SEVERE, null, ex);
         }

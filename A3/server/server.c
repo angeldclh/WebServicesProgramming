@@ -31,6 +31,8 @@ int create_bind_listen_socket(int *sock, struct sockaddr_in *sock_address, int p
         fprintf(stdout,"SERVER: Error at socket creation.\n");
         return -1;
     }
+    if (setsockopt(*sock, SOL_SOCKET, SO_REUSEADDR, &(int){ 1 }, sizeof(int)) < 0)
+        fprintf(stderr, "SERVER: setsockopt(SO_REUSEADDR) failed");
     
     printf("SERVER: socket created.\n");
     

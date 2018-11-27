@@ -70,11 +70,13 @@ void *connection_handler(void *arg){
         if((aux = recv(fd, (char *)&buf, MSGLEN, 0)) == -1){
             fprintf(stderr, "SERVER: Error when receiving message from client.\n");
             close(fd);
+            free(arg);
             return NULL;
         }
         else if (aux == 0) { //Client closed connection -> server closes its socket as well
             printf("SERVER: Client closed the connection.\n");
             close(fd);
+            free(arg);
             return NULL;
         }
  

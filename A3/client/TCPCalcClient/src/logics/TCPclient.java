@@ -19,13 +19,17 @@ import java.net.Socket;
  */
 public class TCPclient {
 
-    private static String hostName = "localhost";
-    private static int port = 50001; //redirected by VirtualBox
+    private static final String HOSTNAME = "localhost";
+    private static final int PORT = 50001; //redirected by VirtualBox
     private final Socket sock;
 
     public TCPclient() throws IOException {
         //TODO crear socket TCP
-        this.sock = new Socket(hostName, port);
+        this.sock = new Socket(HOSTNAME, PORT);
+    }
+
+    public Socket getSock() {
+        return this.sock;
     }
 
     //Sends the calculation to te server and returns the result as a String
@@ -36,7 +40,8 @@ public class TCPclient {
 
         //Receive from server
         BufferedReader in = new BufferedReader(new InputStreamReader(sock.getInputStream()));
-
-        return in.readLine();
+        String res = in.readLine();
+        //sock.close();
+        return res;
     }
 }

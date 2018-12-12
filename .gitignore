@@ -56,3 +56,16 @@ dkms.conf
 
 # Others
 *#*
+/A4/RestCalculator/nbproject/private/
+/A4/RestCalculator/build/
+/A4/RestCalculator/dist/
+/A4/HelloWorldApplication/nbproject/private/
+/A4/HelloWorldApplication/build/
+/A4/HelloWorldApplication/dist/
+/A4/HelloWorldApplication2/nbproject/private/
+/A4/Calculator/nbproject/private/
+/A4/Calculator/build/
+/A4/Calculator/dist/
+/A4/CalculatorOld/nbproject/private/
+/A4/MavenCalculatorClient/target/
+/A4/CalculatorRestClient/target/
